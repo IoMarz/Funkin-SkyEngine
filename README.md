@@ -12,6 +12,4 @@
 
 Linux: https://bit.ly/3ybTYSe
 
-Windows: https://bit.ly/3wdiGzE
-
-MacOS builds Coming Soon!
+Windows & MacOS builds Coming Soon!
