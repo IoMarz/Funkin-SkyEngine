@@ -14,4 +14,4 @@ Linux: https://bit.ly/3ybTYSe
 
 Windows: https://bit.ly/3wdiGzE
 
-MacOS bulds Coming Soon!
+MacOS builds Coming Soon!
