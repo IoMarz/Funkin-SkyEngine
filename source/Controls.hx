@@ -14,18 +14,18 @@ import flixel.input.keyboard.FlxKey;
 #if (haxe >= "4.0.0")
 enum abstract Action(String) to String from String
 {
-	var UP = "up";
-	var LEFT = "left";
-	var RIGHT = "right";
-	var DOWN = "down";
-	var UP_P = "up-press";
-	var LEFT_P = "left-press";
-	var RIGHT_P = "right-press";
-	var DOWN_P = "down-press";
-	var UP_R = "up-release";
-	var LEFT_R = "left-release";
-	var RIGHT_R = "right-release";
-	var DOWN_R = "down-release";
+	var UP = "J";
+	var LEFT = "D";
+	var RIGHT = "K";
+	var DOWN = "F";
+	var UP_P = "J-press";
+	var LEFT_P = "D-press";	
+	var RIGHT_P = "K-press";
+	var DOWN_P = "F-press";
+	var UP_R = "J-release";
+	var LEFT_R = "D-release";
+	var RIGHT_R = "K-release";
+	var DOWN_R = "F-release";
 	var ACCEPT = "accept";
 	var BACK = "back";
 	var PAUSE = "pause";
@@ -36,18 +36,18 @@ enum abstract Action(String) to String from String
 @:enum
 abstract Action(String) to String from String
 {
-	var UP = "up";
-	var LEFT = "left";
-	var RIGHT = "right";
-	var DOWN = "down";
-	var UP_P = "up-press";
-	var LEFT_P = "left-press";
-	var RIGHT_P = "right-press";
-	var DOWN_P = "down-press";
-	var UP_R = "up-release";
-	var LEFT_R = "left-release";
-	var RIGHT_R = "right-release";
-	var DOWN_R = "down-release";
+	var UP = "J";
+	var LEFT = "D";
+	var RIGHT = "K";
+	var DOWN = "F";
+	var UP_P = "J-press";
+	var LEFT_P = "D-press";
+	var RIGHT_P = "K-press";
+	var DOWN_P = "F-press";
+	var UP_R = "J-release";
+	var LEFT_R = "D-release";
+	var RIGHT_R = "K-release";
+	var DOWN_R = "F-release";
 	var ACCEPT = "accept";
 	var BACK = "back";
 	var PAUSE = "pause";
@@ -498,19 +498,19 @@ class Controls extends FlxActionSet
 		switch (scheme)
 		{
 			case Solo:
-				inline bindKeys(Control.UP, [W, FlxKey.UP]);
-				inline bindKeys(Control.DOWN, [S, FlxKey.DOWN]);
-				inline bindKeys(Control.LEFT, [A, FlxKey.LEFT]);
-				inline bindKeys(Control.RIGHT, [D, FlxKey.RIGHT]);
+				inline bindKeys(Control.UP, [J, FlxKey.UP]);
+				inline bindKeys(Control.DOWN, [F, FlxKey.DOWN]);
+				inline bindKeys(Control.LEFT, [D, FlxKey.LEFT]);
+				inline bindKeys(Control.RIGHT, [K, FlxKey.RIGHT]);
 				inline bindKeys(Control.ACCEPT, [Z, SPACE, ENTER]);
 				inline bindKeys(Control.BACK, [BACKSPACE, ESCAPE]);
 				inline bindKeys(Control.PAUSE, [P, ENTER, ESCAPE]);
 				inline bindKeys(Control.RESET, [R]);
 			case Duo(true):
-				inline bindKeys(Control.UP, [W]);
-				inline bindKeys(Control.DOWN, [S]);
-				inline bindKeys(Control.LEFT, [A]);
-				inline bindKeys(Control.RIGHT, [D]);
+				inline bindKeys(Control.UP, [J]);
+				inline bindKeys(Control.DOWN, [F]);
+				inline bindKeys(Control.LEFT, [D]);
+				inline bindKeys(Control.RIGHT, [K]);
 				inline bindKeys(Control.ACCEPT, [G, Z]);
 				inline bindKeys(Control.BACK, [H, X]);
 				inline bindKeys(Control.PAUSE, [ONE]);
@@ -531,19 +531,19 @@ class Controls extends FlxActionSet
 		switch (scheme)
 		{
 			case Solo:
-				bindKeys(Control.UP, [W, FlxKey.UP]);
-				bindKeys(Control.DOWN, [S, FlxKey.DOWN]);
-				bindKeys(Control.LEFT, [A, FlxKey.LEFT]);
-				bindKeys(Control.RIGHT, [D, FlxKey.RIGHT]);
+				bindKeys(Control.UP, [J, FlxKey.UP]);
+				bindKeys(Control.DOWN, [F, FlxKey.DOWN]);
+				bindKeys(Control.LEFT, [D, FlxKey.LEFT]);
+				bindKeys(Control.RIGHT, [K, FlxKey.RIGHT]);
 				bindKeys(Control.ACCEPT, [Z, SPACE, ENTER]);
 				bindKeys(Control.BACK, [BACKSPACE, ESCAPE]);
 				bindKeys(Control.PAUSE, [P, ENTER, ESCAPE]);
 				bindKeys(Control.RESET, [R]);
 			case Duo(true):
-				bindKeys(Control.UP, [W]);
-				bindKeys(Control.DOWN, [S]);
-				bindKeys(Control.LEFT, [A]);
-				bindKeys(Control.RIGHT, [D]);
+				bindKeys(Control.UP, [J]);
+				bindKeys(Control.DOWN, [F]);
+				bindKeys(Control.LEFT, [D]);
+				bindKeys(Control.RIGHT, [K]);
 				bindKeys(Control.ACCEPT, [G, Z]);
 				bindKeys(Control.BACK, [H, X]);
 				bindKeys(Control.PAUSE, [ONE]);

@@ -53,6 +53,18 @@ class PlayState extends MusicBeatState
 	public static var storyPlaylist:Array<String> = [];
 	public static var storyDifficulty:Int = 1;
 
+	public static var hitState:String = "Empty";
+
+	private var misses:Int = 0;
+	var missText:FlxText;
+
+	private var rankingTxt:FlxText;
+	var ranking:String = "FC";
+
+	private var missesTxt:FlxText;
+
+	var tempMissCount:Int;
+
 	var halloweenLevel:Bool = false;
 
 	private var vocals:FlxSound;
@@ -133,6 +145,7 @@ class PlayState extends MusicBeatState
 	var detailsText:String = "";
 	var detailsPausedText:String = "";
 	#end
+	var trackedAssets:Array<FlxBasic> = [];
 
 	override public function create()
 	{
@@ -712,7 +725,7 @@ class PlayState extends MusicBeatState
 
 		add(camFollow);
 
-		FlxG.camera.follow(camFollow, LOCKON, 0.04);
+		FlxG.camera.follow(camFollow, LOCKON, 0.036);
 		// FlxG.camera.setScrollBounds(0, FlxG.width, 0, FlxG.height);
 		FlxG.camera.zoom = defaultCamZoom;
 		FlxG.camera.focusOn(camFollow.getPosition());
@@ -731,20 +744,42 @@ class PlayState extends MusicBeatState
 		healthBar.scrollFactor.set();
 		healthBar.createFilledBar(0xFFFF0000, 0xFF66FF33);
 		// healthBar
-		add(healthBar);
 
-		scoreTxt = new FlxText(healthBarBG.x + healthBarBG.width - 190, healthBarBG.y + 30, 0, "", 20);
-		scoreTxt.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, RIGHT);
+		scoreTxt = new FlxText(healthBarBG.x + healthBarBG.width - 920, healthBarBG.y - 60, 0, "", 120);
+		scoreTxt.setFormat(Paths.font("pixel.otf"), 16, FlxColor.WHITE, RIGHT);
 		scoreTxt.scrollFactor.set();
-		add(scoreTxt);
+
+		// This is actually combo shhhh
+		missText = new FlxText(healthBarBG.x + healthBarBG.width - 920, healthBarBG.y - 20, 0, "", 120);
+		missText.setFormat(Paths.font("pixel.otf"), 16, FlxColor.WHITE, RIGHT);
+		missText.scrollFactor.set();
+
+		rankingTxt = new FlxText(healthBarBG.x + healthBarBG.width - 920, healthBarBG.y + 20, 0, "", 120);
+		rankingTxt.setFormat(Paths.font("pixel.otf"), 16, FlxColor.WHITE, RIGHT);
+		rankingTxt.scrollFactor.set();
+
+		/*
+		missesTxt = new FlxText(healthBarBG.x + healthBarBG.width - 890, healthBarBG.y, 0, "", 120);
+		missesTxt.setFormat(Paths.font("pixel.otf"), 16, FlxColor.WHITE, RIGHT);
+		missesTxt.scrollFactor.set();
+		add(missesTxt);
+		*/
 
 		iconP1 = new HealthIcon(SONG.player1, true);
 		iconP1.y = healthBar.y - (iconP1.height / 2);
-		add(iconP1);
 
 		iconP2 = new HealthIcon(SONG.player2, false);
 		iconP2.y = healthBar.y - (iconP2.height / 2);
-		add(iconP2);
+
+		if (Options.uiToggle)
+		{
+			add(healthBar);
+			add(scoreTxt);
+			add(missText);
+			add(rankingTxt);
+			add(iconP1);
+			add(iconP2);
+		}
 
 		strumLineNotes.cameras = [camHUD];
 		notes.cameras = [camHUD];
@@ -753,6 +788,9 @@ class PlayState extends MusicBeatState
 		iconP1.cameras = [camHUD];
 		iconP2.cameras = [camHUD];
 		scoreTxt.cameras = [camHUD];
+		missText.cameras = [camHUD];
+		rankingTxt.cameras = [camHUD];
+		// missesTxt.cameras = [camHUD];
 		doof.cameras = [camHUD];
 
 		// if (SONG.song == 'South')
@@ -925,7 +963,7 @@ class PlayState extends MusicBeatState
 			boyfriend.playAnim('idle');
 
 			var introAssets:Map<String, Array<String>> = new Map<String, Array<String>>();
-			introAssets.set('default', ['ready', "set", "go"]);
+			introAssets.set('default', ['ready', "set", "go!"]);
 			introAssets.set('school', ['weeb/pixelUI/ready-pixel', 'weeb/pixelUI/set-pixel', 'weeb/pixelUI/date-pixel']);
 			introAssets.set('schoolEvil', ['weeb/pixelUI/ready-pixel', 'weeb/pixelUI/set-pixel', 'weeb/pixelUI/date-pixel']);
 
@@ -1364,7 +1402,13 @@ class PlayState extends MusicBeatState
 
 		super.update(elapsed);
 
-		scoreTxt.text = "Score:" + songScore;
+		scoreTxt.text = "Score: " + songScore;
+
+		missText.text = "Combo: " + combo;
+
+		// missesTxt.text = "Misses: " + misses;
+
+		rankingTxt.text = "Rank: " + ranking;
 
 		if (FlxG.keys.justPressed.ENTER && startedCountdown && canPause)
 		{
@@ -1585,6 +1629,8 @@ class PlayState extends MusicBeatState
 			vocals.stop();
 			FlxG.sound.music.stop();
 
+			unloadAssets();
+
 			openSubState(new GameOverSubstate(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y));
 
 			// FlxG.switchState(new GameOverState(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y));
@@ -1678,8 +1724,37 @@ class PlayState extends MusicBeatState
 				{
 					if (daNote.tooLate || !daNote.wasGoodHit)
 					{
+						hitState = "Note";
 						health -= 0.0475;
+						combo = 0;
+						misses += 1;
 						vocals.volume = 0;
+						if (!Options.newInput)
+							songScore -= 20;
+
+						if (misses >= 1 && combo <= 0)
+						{
+							ranking = "Good";
+						}
+						
+						if (misses > 20)
+						{
+							ranking = "Ok";
+						}
+
+						if (misses > 40)
+						{
+							ranking = "Bad";
+						}
+
+						if (misses > 100)
+						{
+							ranking = "Worse";
+						}
+					}
+					if (combo == 0)
+					{
+						misses += 1;
 					}
 
 					daNote.active = false;
@@ -1725,6 +1800,7 @@ class PlayState extends MusicBeatState
 
 				transIn = FlxTransitionableState.defaultTransIn;
 				transOut = FlxTransitionableState.defaultTransOut;
+				unloadAssets();
 
 				FlxG.switchState(new StoryMenuState());
 
@@ -1772,11 +1848,13 @@ class PlayState extends MusicBeatState
 				FlxG.sound.music.stop();
 
 				LoadingState.loadAndSwitchState(new PlayState());
+				unloadAssets();
 			}
 		}
 		else
 		{
 			trace('WENT BACK TO FREEPLAY??');
+			unloadAssets();
 			FlxG.switchState(new FreeplayState());
 		}
 	}
@@ -2135,14 +2213,20 @@ class PlayState extends MusicBeatState
 	{
 		if (!boyfriend.stunned)
 		{
-			health -= 0.04;
-			if (combo > 5 && gf.animOffsets.exists('sad'))
+			misses += 1;
+			hitState = "Empty";
+			if (Options.newInput)
 			{
-				gf.playAnim('sad');
-			}
-			combo = 0;
+				health -= 0.04;
+				if (combo > 5 && gf.animOffsets.exists('sad'))
+				{
+					gf.playAnim('sad');
+				}
+				combo = 0;
 
-			songScore -= 10;
+				songScore -= 10;
+			} 
+			else
 
 			FlxG.sound.play(Paths.soundRandom('missnote', 1, 3), FlxG.random.float(0.1, 0.2));
 			// FlxG.sound.play(Paths.sound('missnote1'), 1, false);
@@ -2179,6 +2263,7 @@ class PlayState extends MusicBeatState
 		var downP = controls.DOWN_P;
 		var leftP = controls.LEFT_P;
 
+		/*
 		if (leftP)
 			noteMiss(0);
 		if (downP)
@@ -2187,6 +2272,7 @@ class PlayState extends MusicBeatState
 			noteMiss(2);
 		if (rightP)
 			noteMiss(3);
+		*/
 	}
 
 	function noteCheck(keyP:Bool, note:Note):Void
@@ -2462,6 +2548,20 @@ class PlayState extends MusicBeatState
 		if (isHalloween && FlxG.random.bool(10) && curBeat > lightningStrikeBeat + lightningOffset)
 		{
 			lightningStrikeShit();
+		}
+	}
+
+	override function add(Object:FlxBasic):FlxBasic
+	{
+		trackedAssets.insert(trackedAssets.length, Object);
+		return super.add(Object);
+	}
+	
+	function unloadAssets():Void
+	{
+		for (asset in trackedAssets)
+		{
+			remove(asset);
 		}
 	}
 
