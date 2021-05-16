@@ -8,8 +8,10 @@
 - [PhantomArcade3K](https://twitter.com/phantomarcade3k) and [Evilsk8r](https://twitter.com/evilsk8r) - Art
 - [Kawaisprite](https://twitter.com/kawaisprite) - Musician
 
-## Downloads V1.0 (Linux only ATM)
+## Downloads V1.0
 
 Linux: https://bit.ly/3ybTYSe
 
-Windows and MacOS bulds Coming Soon!
+Windows: https://bit.ly/3wdiGzE
+
+MacOS bulds Coming Soon!
