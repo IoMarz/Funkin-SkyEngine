@@ -98,7 +98,7 @@ class MainMenuState extends MusicBeatState
 
 		FlxG.camera.follow(camFollow, null, 0.06);
 
-		var versionShit:FlxText = new FlxText(5, FlxG.height - 18, 0, "v" + Application.current.meta.get('version') + " + SkyEngine v1.0 Development Release", 12);
+		var versionShit:FlxText = new FlxText(5, FlxG.height - 18, 0, "v" + Application.current.meta.get('version') + " + SkyEngine v1.1", 12);
 		versionShit.scrollFactor.set();
 		versionShit.setFormat("VCR OSD Mono", 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		add(versionShit);
@@ -173,6 +173,7 @@ class MainMenuState extends MusicBeatState
 							{
 								var daChoice:String = optionShit[curSelected];
 
+								unloadAssets();
 								switch (daChoice)
 								{
 									case 'story mode':
@@ -187,8 +188,6 @@ class MainMenuState extends MusicBeatState
 										FlxTransitionableState.skipNextTransIn = true;
 										FlxTransitionableState.skipNextTransOut = true;
 										FlxG.switchState(new OptionsMenu());
-									
-									unloadAssets();
 								}
 							});
 						}
