@@ -8,11 +8,12 @@
 - [PhantomArcade3K](https://twitter.com/phantomarcade3k) and [Evilsk8r](https://twitter.com/evilsk8r) - Art
 - [Kawaisprite](https://twitter.com/kawaisprite) - Musician
 
-## Downloads V1.1
+## Downloads
 
-Linux: https://bit.ly/3eRrqWq
+https://github.com/IoMarz/Funkin-SkyEngine/releases
 
-Windows & MacOS builds Coming Soon!
+## Changes in the V1.1.1 update:
+- Minor fixes
 
 ## Changes in the V1.1 update:
 - Fixed a bug where selecting Freeplay mode would crash the game
