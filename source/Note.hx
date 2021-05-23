@@ -81,7 +81,7 @@ class Note extends FlxSprite
 
 			default:
 				frames = Paths.getSparrowAtlas('NOTE_assets');
-
+				
 				animation.addByPrefix('greenScroll', 'green0');
 				animation.addByPrefix('redScroll', 'red0');
 				animation.addByPrefix('blueScroll', 'blue0');
@@ -99,7 +99,7 @@ class Note extends FlxSprite
 
 				setGraphicSize(Std.int(width * 0.7));
 				updateHitbox();
-				antialiasing = true;
+				antialiasing = Options.characterAA;
 		}
 
 		switch (noteData)

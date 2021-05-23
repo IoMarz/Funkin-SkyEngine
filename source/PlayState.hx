@@ -58,10 +58,14 @@ class PlayState extends MusicBeatState
 	private var misses:Int = 0;
 	var missText:FlxText;
 
+	var songTxt:FlxText;
+
 	private var rankingTxt:FlxText;
 	var ranking:String = "FC";
 
 	private var missesTxt:FlxText;
+
+	private var instaDeathTxt:FlxText;
 
 	var tempMissCount:Int;
 
@@ -239,6 +243,8 @@ class PlayState extends MusicBeatState
 		// Updating Discord Rich Presence.
 		DiscordClient.changePresence(detailsText, SONG.song + " (" + storyDifficultyText + ")", iconRPC);
 		#end
+
+
 
 		switch (SONG.song.toLowerCase())
 		{
@@ -749,7 +755,7 @@ class PlayState extends MusicBeatState
 		scoreTxt.setFormat(Paths.font("pixel.otf"), 16, FlxColor.WHITE, RIGHT);
 		scoreTxt.scrollFactor.set();
 
-		// This is actually combo shhhh
+		// This is actually combo shhhh im just really lazy
 		missText = new FlxText(healthBarBG.x + healthBarBG.width - 920, healthBarBG.y - 20, 0, "", 120);
 		missText.setFormat(Paths.font("pixel.otf"), 16, FlxColor.WHITE, RIGHT);
 		missText.scrollFactor.set();
@@ -765,6 +771,16 @@ class PlayState extends MusicBeatState
 		add(missesTxt);
 		*/
 
+		songTxt = new FlxText(healthBarBG.x + healthBarBG.width - 80, healthBarBG.y + 40, 0, "", 120);
+		songTxt.setFormat(Paths.font("pixel.otf"), 16, FlxColor.BLACK, LEFT);
+		songTxt.scrollFactor.set();
+
+		instaDeathTxt = new FlxText(healthBarBG.x + healthBarBG.width - 920, healthBarBG.y + 40, 0, "", 120);
+		instaDeathTxt.setFormat(Paths.font("pixel.otf"), 16, FlxColor.WHITE, RIGHT);
+		instaDeathTxt.scrollFactor.set();
+		if (Options.instaDeath)
+			add(instaDeathTxt);
+
 		iconP1 = new HealthIcon(SONG.player1, true);
 		iconP1.y = healthBar.y - (iconP1.height / 2);
 
@@ -779,6 +795,7 @@ class PlayState extends MusicBeatState
 			add(rankingTxt);
 			add(iconP1);
 			add(iconP2);
+			add(songTxt);
 		}
 
 		strumLineNotes.cameras = [camHUD];
@@ -791,6 +808,8 @@ class PlayState extends MusicBeatState
 		missText.cameras = [camHUD];
 		rankingTxt.cameras = [camHUD];
 		// missesTxt.cameras = [camHUD];
+		songTxt.cameras = [camHUD];
+		instaDeathTxt.cameras = [camHUD];
 		doof.cameras = [camHUD];
 
 		// if (SONG.song == 'South')
@@ -963,7 +982,7 @@ class PlayState extends MusicBeatState
 			boyfriend.playAnim('idle');
 
 			var introAssets:Map<String, Array<String>> = new Map<String, Array<String>>();
-			introAssets.set('default', ['ready', "set", "go!"]);
+			introAssets.set('default', ['ready', "set", "go"]);
 			introAssets.set('school', ['weeb/pixelUI/ready-pixel', 'weeb/pixelUI/set-pixel', 'weeb/pixelUI/date-pixel']);
 			introAssets.set('schoolEvil', ['weeb/pixelUI/ready-pixel', 'weeb/pixelUI/set-pixel', 'weeb/pixelUI/date-pixel']);
 
@@ -1408,6 +1427,10 @@ class PlayState extends MusicBeatState
 
 		// missesTxt.text = "Misses: " + misses;
 
+		songTxt.text = SONG.song + " " + curStage + " - SkyEngine v1.2";
+
+		instaDeathTxt.text = "Insta Death mode Enabled";
+
 		rankingTxt.text = "Rank: " + ranking;
 
 		if (FlxG.keys.justPressed.ENTER && startedCountdown && canPause)
@@ -1725,12 +1748,19 @@ class PlayState extends MusicBeatState
 					if (daNote.tooLate || !daNote.wasGoodHit)
 					{
 						hitState = "Note";
-						health -= 0.0475;
+						if (!Options.instaDeath)
+						{
+							health -= 0.0475;
+						}
+						else
+						{
+							health -= 200;
+						}
 						combo = 0;
 						misses += 1;
 						vocals.volume = 0;
 						if (!Options.newInput)
-							songScore -= 20;
+							songScore -= 10;
 
 						if (misses >= 1 && combo <= 0)
 						{

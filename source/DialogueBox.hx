@@ -166,7 +166,7 @@ class DialogueBox extends FlxSpriteGroup
 		{
 			if (box.animation.curAnim.name == 'normalOpen' && box.animation.curAnim.finished)
 			{
-				box.animation.play('normal');
+				// box.animation.play('normal');
 				dialogueOpened = true;
 			}
 		}

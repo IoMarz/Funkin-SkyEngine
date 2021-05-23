@@ -1,5 +1,8 @@
 package;
 
+#if desktop
+import Discord.DiscordClient;
+#end
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxGroup.FlxTypedGroup;
@@ -8,7 +11,7 @@ import flixel.util.FlxColor;
 
 class OptionsSubState extends MusicBeatSubstate
 {
-	var textMenuItems:Array<String> = ['Return to Main Menu', 'Input System', 'UI', 'Character AA'];
+	var textMenuItems:Array<String> = ['Return to Main Menu', 'Input System', 'InGame UI', 'Character AA', 'Insta Death', 'Reset to Defaults'];
 
 	var selector:FlxSprite;
 	var curSelected:Int = 0;
@@ -24,6 +27,9 @@ class OptionsSubState extends MusicBeatSubstate
 	var aaTypeSelected:FlxText;
 	var aaTypeText:String;
 
+	var instaDeathTypeSelected:FlxText;
+	var instaDeathTypeText:String;
+
 	public function new()
 	{
 		super();
@@ -35,8 +41,32 @@ class OptionsSubState extends MusicBeatSubstate
 		add(selector);
 
 		inputSelectedText = "New Inputs";
-		uiTypeText = "Enabled";
-		aaTypeText = "Enabled";
+		if (Options.uiToggle)
+		{
+			uiTypeText = "Enabled";
+		}
+		else
+		{
+			uiTypeText = "Disabled";
+		}
+
+		if (Options.characterAA)
+		{
+			aaTypeText = "Enabled";
+		}
+		else
+		{
+			aaTypeText = "Disabled";
+		}
+
+		if (Options.instaDeath)
+		{
+			instaDeathTypeText = "Enabled";
+		}
+		else
+		{
+			instaDeathTypeText = "Disabled";
+		}
 
 		inputTypeSelected = new FlxText(20, 400, 0, inputSelectedText, 32);
 		add(inputTypeSelected);
@@ -47,12 +77,21 @@ class OptionsSubState extends MusicBeatSubstate
 		aaTypeSelected = new FlxText(20, 500, 0, uiTypeText, 32);
 		add(aaTypeSelected);
 
+		instaDeathTypeSelected = new FlxText(20, 550, 0, uiTypeText, 32);
+		add(instaDeathTypeSelected);
+
 		for (i in 0...textMenuItems.length)
 		{
-			var optionText:FlxText = new FlxText(20, 20 + (i * 50), 0, textMenuItems[i], 32);
+			var optionText:FlxText = new FlxText(20 + (i * 80), 20 + (i * 90), 0, textMenuItems[i], 80);
+			optionText.setFormat(Paths.font("Schoolgirls.otf"), 80, FlxColor.WHITE, RIGHT);
 			optionText.ID = i;
 			grpOptionsTexts.add(optionText);
 		}
+
+		#if desktop
+		// Updating Discord Rich Presence
+		DiscordClient.changePresence("In the Settings", null);
+		#end
 	}
 
 	override function update(elapsed:Float)
@@ -62,6 +101,7 @@ class OptionsSubState extends MusicBeatSubstate
 		inputTypeSelected.text = inputSelectedText;
 		uiTypeSelected.text = uiTypeText;
 		aaTypeSelected.text = aaTypeText;
+		instaDeathTypeSelected.text = instaDeathTypeText;
 
 		if (controls.UP_P)
 			curSelected -= 1;
@@ -94,20 +134,20 @@ class OptionsSubState extends MusicBeatSubstate
 					FlxG.sound.play(Paths.sound('confirmMenu'));
 					// Old inputs are currently broken :/
 					/*
-					if (Options.newInput == true)
-					{
-						inputSelectedText = "Old Inputs";
-						Options.newInput = false;	
-					} 
-					else if (Options.newInput == false) 
+					if (Options.newInput)
 					{
 						inputSelectedText = "New Inputs";
-						Options.newInput = true;
+						Options.newInput = false;
+					} 
+					else if (!Options.newInput) 
+					{
+						inputSelectedText = "Old Inputs";
+						Options.newInput = true;	
 					}
 					*/
 				case "Return to Main Menu":
 					FlxG.switchState(new MainMenuState());
-				case "UI":
+				case "InGame UI":
 					if (Options.uiToggle)
 					{
 						Options.uiToggle = false;
@@ -133,6 +173,31 @@ class OptionsSubState extends MusicBeatSubstate
 						aaTypeText = "Enabled";
 						FlxG.sound.play(Paths.sound('confirmMenu'));
 					}
+				case "Insta Death":
+					if (Options.instaDeath)
+					{
+						Options.instaDeath = false;
+						instaDeathTypeText = "Disabled";
+						FlxG.sound.play(Paths.sound('confirmMenu'));
+					}
+					else
+					{
+						Options.instaDeath = true;
+						instaDeathTypeText = "Enabled";
+						FlxG.sound.play(Paths.sound('confirmMenu'));
+					}
+				case "Reset to Defaults":
+					FlxG.sound.play(Paths.sound('confirmMenu'));
+
+					Options.newInput = false;
+					Options.uiToggle = true;
+					Options.characterAA = true;
+					Options.instaDeath = false;
+
+					inputSelectedText = "New Inputs";
+					uiTypeText = "Enabled";
+					aaTypeText = "Enabled";
+					instaDeathTypeText = "Disabled";
 			}
 		}
 	}
