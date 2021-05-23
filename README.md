@@ -12,6 +12,12 @@
 
 https://github.com/IoMarz/Funkin-SkyEngine/releases
 
+## Changes in the V1.2 update:
+- Settings Menu Changes
+- Insta Death Mode
+- Minor fixes
+- Discord_rpc changes
+
 ## Changes in the V1.1.1 update:
 - Minor fixes
 
